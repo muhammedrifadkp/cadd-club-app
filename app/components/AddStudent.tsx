@@ -9,9 +9,11 @@ import {
   StyleSheet,
   Alert,
   Image,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export interface InstalledSoftware {
   name: string;
@@ -48,6 +50,10 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
   const [softwareList, setSoftwareList] = useState<InstalledSoftware[]>([
     { name: "", installDate: "", image: "" },
   ]);
+
+  // State for date picker visibility
+  const [showDatePicker, setShowDatePicker] = useState<{[key: number]: boolean}>({});
+  const [selectedDateIndex, setSelectedDateIndex] = useState<number | null>(null);
 
   const departments = [
     "Computer Science",
@@ -94,6 +100,33 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     const updatedList = [...softwareList];
     updatedList[index][field] = value;
     setSoftwareList(updatedList);
+  };
+
+  // Function to format date as MM/DD/YYYY
+  const formatDate = (date: Date): string => {
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  // Function to handle date change for software installation
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    if (selectedDateIndex === null) return;
+    
+    if (selectedDate) {
+      handleSoftwareChange(selectedDateIndex, "installDate", formatDate(selectedDate));
+    }
+    
+    // Hide the date picker
+    setShowDatePicker(prev => ({ ...prev, [selectedDateIndex]: false }));
+    setSelectedDateIndex(null);
+  };
+
+  // Function to show date picker for software installation
+  const openDatePicker = (index: number) => {
+    setSelectedDateIndex(index);
+    setShowDatePicker(prev => ({ ...prev, [index]: true }));
   };
 
   // Function for image selection using device gallery
@@ -232,15 +265,31 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
               />
             </View>
             
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Install Date (YYYY-MM-DD)"
-                value={software.installDate}
-                onChangeText={(text) =>
-                  handleSoftwareChange(index, "installDate", text)
-                }
-              />
+            {/* Date Input with Calendar Picker */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Install Date</Text>
+              <TouchableOpacity 
+                style={styles.dateInputContainer}
+                onPress={() => openDatePicker(index)}
+              >
+                <TextInput
+                  style={styles.input}
+                  placeholder="Select install date"
+                  value={software.installDate}
+                  editable={false}
+                />
+                <Ionicons name="calendar" size={20} color="#6b7280" style={styles.calendarIcon} />
+              </TouchableOpacity>
+              
+              {/* Date picker - only show for the selected index */}
+              {showDatePicker[index] && (
+                <DateTimePicker
+                  value={software.installDate ? new Date(software.installDate) : new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={handleDateChange}
+                />
+              )}
             </View>
 
             {/* Image Upload Section */}
@@ -334,11 +383,29 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOffset: { width: 0, height: 1 },
   },
+  dateInputContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#d1d5db",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingRight: 14,
+  },
+  calendarIcon: {
+    marginLeft: 10,
+  },
   input: {
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
     color: "#1e293b",
+    flex: 1,
   },
   sectionHeader: {
     marginTop: 10,
