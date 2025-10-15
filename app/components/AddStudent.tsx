@@ -11,6 +11,7 @@ import {
   Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 export interface InstalledSoftware {
   name: string;
@@ -95,14 +96,28 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     setSoftwareList(updatedList);
   };
 
-  // Mock function for image selection (in a real app, you would use ImagePicker)
-  const handleSelectImage = (index: number) => {
-    // This is a mock implementation - in a real app you would use:
-    // 1. expo-image-picker for mobile
-    // 2. HTML input for web
-    // For now, we'll simulate with a placeholder
-    const mockImageUri = "https://via.placeholder.com/150/0000FF/808080?text=Installation+Image";
-    handleSoftwareChange(index, "image", mockImageUri);
+  // Function for image selection using device gallery
+  const handleSelectImage = async (index: number) => {
+    // Request permission to access media library
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission required", "Permission to access camera roll is required!");
+      return;
+    }
+    
+    // Launch image picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const selectedImage = result.assets[0];
+      handleSoftwareChange(index, "image", selectedImage.uri);
+    }
   };
 
   const handleSubmit = () => {
