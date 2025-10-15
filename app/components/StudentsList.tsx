@@ -44,6 +44,7 @@ export default function StudentsList({
   onDeleteStudent,
 }: StudentsListProps) {
   const [search, setSearch] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const router = useRouter();
 
   const filteredStudents = (students || []).filter(
@@ -51,6 +52,9 @@ export default function StudentsList({
       s.name.toLowerCase().includes(search.toLowerCase()) ||
       s.caddId.toLowerCase().includes(search.toLowerCase())
   );
+
+  // Determine whether to show students based on search state
+  const shouldShowStudents = isSearchFocused && search.length > 0;
 
   const handleStudentClick = (studentId: string) => {
     router.push(`/student/${studentId}`);
@@ -99,6 +103,8 @@ export default function StudentsList({
           placeholder="Search by name or ID"
           value={search}
           onChangeText={setSearch}
+          onFocus={() => setIsSearchFocused(true)}
+          onBlur={() => setIsSearchFocused(false)}
           style={styles.searchInput}
         />
         {search.length > 0 && (
@@ -109,32 +115,41 @@ export default function StudentsList({
       </View>
 
       {/* Student List */}
-      <FlatList
-        data={filteredStudents}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View>
-            <TouchableOpacity onPress={() => handleStudentClick(item.id)}>
-              <StudentCard
-                name={item.name}
-                caddId={item.caddId}
-                course={item.course}
-                department={item.department}
-                onEdit={() => handleEditStudent(item)}
-                onDelete={() => handleDeleteStudent(item)}
-              />
-            </TouchableOpacity>
-          </View>
-        )}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Ionicons name="people-outline" size={48} color="#94a3b8" />
-            <Text style={styles.emptyText}>No students found</Text>
-            <Text style={styles.emptySubText}>Try adjusting your search or add a new student</Text>
-          </View>
-        }
-      />
+      {shouldShowStudents ? (
+        <FlatList
+          data={filteredStudents}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View>
+              <TouchableOpacity onPress={() => handleStudentClick(item.id)}>
+                <StudentCard
+                  name={item.name}
+                  caddId={item.caddId}
+                  course={item.course}
+                  department={item.department}
+                  onEdit={() => handleEditStudent(item)}
+                  onDelete={() => handleDeleteStudent(item)}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Ionicons name="people-outline" size={48} color="#94a3b8" />
+              <Text style={styles.emptyText}>No students found</Text>
+              <Text style={styles.emptySubText}>Try adjusting your search or add a new student</Text>
+            </View>
+          }
+        />
+      ) : (
+        // Show empty state when not searching
+        <View style={styles.emptyContainer}>
+          <Ionicons name="search" size={48} color="#94a3b8" />
+          <Text style={styles.emptyText}>Search for students</Text>
+          <Text style={styles.emptySubText}>Enter a name or ID in the search box above to find students</Text>
+        </View>
+      )}
 
       {/* Add Button */}
       {onAddClick && (
