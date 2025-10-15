@@ -1,9 +1,8 @@
 // components/ImageViewer.js
 import React from "react";
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Modal, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { X } from "lucide-react-native";
-import { Image } from "react-native";
 
 const ImageViewer = ({ visible, imageUri, onClose }) => {
   return (
