@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
   Platform,
+  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -54,14 +55,16 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
   // State for date picker visibility
   const [showDatePicker, setShowDatePicker] = useState<{[key: number]: boolean}>({});
   const [selectedDateIndex, setSelectedDateIndex] = useState<number | null>(null);
+  
+  // State for department dropdown
+  const [showDepartmentDropdown, setShowDepartmentDropdown] = useState(false);
 
+  // Updated departments list with the 4 specific departments
   const departments = [
-    "Computer Science",
-    "Mechanical Engineering",
-    "Civil Engineering",
-    "Electrical Engineering",
-    "Electronics",
-    "Architecture",
+    "CADD",
+    "LIVE WIRE",
+    "DREAM ZONE",
+    "SYNERGY",
   ];
 
   // Populate form with student data when editing
@@ -210,29 +213,130 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
       {/* Form */}
       <ScrollView contentContainerStyle={styles.form}>
         {/* Input Fields */}
-        {[
-          { label: "Full Name *", key: "name", placeholder: "Enter student full name" },
-          { label: "Age *", key: "age", placeholder: "Enter age", keyboardType: "numeric" },
-          { label: "Department *", key: "department", placeholder: "Enter department" },
-          { label: "Course *", key: "course", placeholder: "Enter course name" },
-          { label: "CADD Club ID *", key: "caddId", placeholder: "Enter CADD Club ID" },
-          { label: "PC Model", key: "pcModel", placeholder: "Enter PC model (optional)" },
-        ].map((field) => (
-          <View key={field.key} style={styles.inputGroup}>
-            <Text style={styles.label}>{field.label}</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder={field.placeholder}
-                keyboardType={(field as any).keyboardType}
-                value={(formData as any)[field.key]}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, [field.key]: text })
-                }
-              />
-            </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Full Name *</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter student full name"
+              value={formData.name}
+              onChangeText={(text) =>
+                setFormData({ ...formData, name: text })
+              }
+            />
           </View>
-        ))}
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Age *</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter age"
+              keyboardType="numeric"
+              value={formData.age}
+              onChangeText={(text) =>
+                setFormData({ ...formData, age: text })
+              }
+            />
+          </View>
+        </View>
+
+        {/* Department Dropdown */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Department *</Text>
+          <TouchableOpacity 
+            style={styles.inputContainer}
+            onPress={() => setShowDepartmentDropdown(true)}
+          >
+            <View style={styles.dropdownContainer}>
+              <Text style={[styles.input, !formData.department && styles.placeholderText]}>
+                {formData.department || "Select department"}
+              </Text>
+              <Ionicons name="chevron-down" size={20} color="#6b7280" />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Course *</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter course name"
+              value={formData.course}
+              onChangeText={(text) =>
+                setFormData({ ...formData, course: text })
+              }
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>CADD Club ID *</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter CADD Club ID"
+              value={formData.caddId}
+              onChangeText={(text) =>
+                setFormData({ ...formData, caddId: text })
+              }
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>PC Model</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter PC model (optional)"
+              value={formData.pcModel}
+              onChangeText={(text) =>
+                setFormData({ ...formData, pcModel: text })
+              }
+            />
+          </View>
+        </View>
+
+        {/* Department Dropdown Modal */}
+        <Modal
+          visible={showDepartmentDropdown}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowDepartmentDropdown(false)}
+        >
+          <TouchableOpacity 
+            style={styles.modalOverlay} 
+            onPress={() => setShowDepartmentDropdown(false)}
+            activeOpacity={1}
+          >
+            <View style={styles.dropdownModal}>
+              <View style={styles.dropdownHeader}>
+                <Text style={styles.dropdownTitle}>Select Department</Text>
+                <TouchableOpacity onPress={() => setShowDepartmentDropdown(false)}>
+                  <Ionicons name="close" size={24} color="#6b7280" />
+                </TouchableOpacity>
+              </View>
+              {departments.map((dept, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.dropdownItem}
+                  onPress={() => {
+                    setFormData({ ...formData, department: dept });
+                    setShowDepartmentDropdown(false);
+                  }}
+                >
+                  <Text style={styles.dropdownItemText}>{dept}</Text>
+                  {formData.department === dept && (
+                    <Ionicons name="checkmark" size={20} color="#3b82f6" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </TouchableOpacity>
+        </Modal>
 
         {/* Installed Software Section */}
         <View style={styles.sectionHeader}>
@@ -383,6 +487,16 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOffset: { width: 0, height: 1 },
   },
+  dropdownContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  placeholderText: {
+    color: "#94a3b8",
+  },
   dateInputContainer: {
     backgroundColor: "#fff",
     borderRadius: 12,
@@ -406,6 +520,48 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1e293b",
     flex: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dropdownModal: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    width: "80%",
+    maxHeight: "50%",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+  },
+  dropdownHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
+  },
+  dropdownTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#0f172a",
+  },
+  dropdownItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f1f5f9",
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: "#1e293b",
   },
   sectionHeader: {
     marginTop: 10,
