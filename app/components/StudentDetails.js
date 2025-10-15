@@ -1,9 +1,23 @@
 // components/StudentDetails.js
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { ArrowLeft, User, Calendar, Laptop, Monitor, Image as ImageIcon } from "lucide-react-native";
+import ImageViewer from "./ImageViewer";
 
 const StudentDetails = ({ student, onBack }) => {
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const openImageViewer = (imageUri) => {
+    setSelectedImage(imageUri);
+    setImageViewerVisible(true);
+  };
+
+  const closeImageViewer = () => {
+    setImageViewerVisible(false);
+    setSelectedImage(null);
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -92,11 +106,13 @@ const StudentDetails = ({ student, onBack }) => {
                 {software.image ? (
                   <View style={styles.imageContainer}>
                     <Text style={styles.imageLabel}>Installation Screenshot:</Text>
-                    <Image 
-                      source={{ uri: software.image }} 
-                      style={styles.softwareImage}
-                      resizeMode="cover"
-                    />
+                    <TouchableOpacity onPress={() => openImageViewer(software.image)}>
+                      <Image 
+                        source={{ uri: software.image }} 
+                        style={styles.softwareImage}
+                        resizeMode="cover"
+                      />
+                    </TouchableOpacity>
                   </View>
                 ) : (
                   <View style={styles.noImageContainer}>
@@ -109,11 +125,16 @@ const StudentDetails = ({ student, onBack }) => {
           )}
         </View>
       </ScrollView>
+      
+      {/* Image Viewer Modal */}
+      <ImageViewer 
+        visible={imageViewerVisible} 
+        imageUri={selectedImage} 
+        onClose={closeImageViewer} 
+      />
     </View>
   );
 };
-
-export default StudentDetails;
 
 const styles = StyleSheet.create({
   container: {
@@ -337,3 +358,5 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
 });
+
+export default StudentDetails;
