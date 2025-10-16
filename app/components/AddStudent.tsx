@@ -19,7 +19,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 export interface InstalledSoftware {
   name: string;
   installDate: string;
-  image?: string; // Add image property
 }
 
 export interface Student {
@@ -30,6 +29,7 @@ export interface Student {
   course: string;
   caddId: string;
   pcModel: string;
+  imageUrl?: string; // Add student image property
   installedSoftware: InstalledSoftware[];
 }
 
@@ -46,10 +46,11 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     course: "",
     caddId: "",
     pcModel: "",
+    imageUrl: "",
   });
 
   const [softwareList, setSoftwareList] = useState<InstalledSoftware[]>([
-    { name: "", installDate: "", image: "" },
+    { name: "", installDate: "" },
   ]);
 
   // State for date picker visibility
@@ -77,6 +78,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
         course: studentToEdit.course,
         caddId: studentToEdit.caddId,
         pcModel: studentToEdit.pcModel,
+        imageUrl: studentToEdit.imageUrl || "",
       });
       
       if (studentToEdit.installedSoftware && studentToEdit.installedSoftware.length > 0) {
@@ -86,7 +88,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
   }, [studentToEdit]);
 
   const handleAddSoftware = () => {
-    setSoftwareList([...softwareList, { name: "", installDate: "", image: "" }]);
+    setSoftwareList([...softwareList, { name: "", installDate: "" }]);
   };
 
   const handleRemoveSoftware = (index: number) => {
@@ -97,7 +99,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
 
   const handleSoftwareChange = (
     index: number,
-    field: "name" | "installDate" | "image",
+    field: "name" | "installDate",
     value: string
   ) => {
     const updatedList = [...softwareList];
@@ -132,8 +134,8 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     setShowDatePicker(prev => ({ ...prev, [index]: true }));
   };
 
-  // Function for image selection using device gallery
-  const handleSelectImage = async (index: number) => {
+  // Function for student image selection using device gallery
+  const handleSelectStudentImage = async () => {
     // Request permission to access media library
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     
@@ -152,16 +154,14 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const selectedImage = result.assets[0];
-      handleSoftwareChange(index, "image", selectedImage.uri);
+      setFormData({ ...formData, imageUrl: selectedImage.uri });
     }
   };
 
   const handleSubmit = () => {
     if (
       !formData.name ||
-      !formData.age ||
       !formData.department ||
-      !formData.course ||
       !formData.caddId
     ) {
       Alert.alert("Validation Error", "Please fill in all required fields.");
@@ -194,8 +194,9 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
         course: "",
         caddId: "",
         pcModel: "",
+        imageUrl: "",
       });
-      setSoftwareList([{ name: "", installDate: "", image: "" }]);
+      setSoftwareList([{ name: "", installDate: "" }]);
       Alert.alert("Success", "Student added successfully!");
     } else {
       Alert.alert("Success", "Student updated successfully!");
@@ -228,11 +229,11 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Age *</Text>
+          <Text style={styles.label}>Age (Optional)</Text>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Enter age"
+              placeholder="Enter age (optional)"
               keyboardType="numeric"
               value={formData.age}
               onChangeText={(text) =>
@@ -259,11 +260,11 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Course *</Text>
+          <Text style={styles.label}>Course (Optional)</Text>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Enter course name"
+              placeholder="Enter course name (optional)"
               value={formData.course}
               onChangeText={(text) =>
                 setFormData({ ...formData, course: text })
@@ -298,6 +299,33 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
               }
             />
           </View>
+        </View>
+
+        {/* Student Image Upload Section */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Student Image (Optional)</Text>
+          <TouchableOpacity 
+            style={styles.imageUploadButton} 
+            onPress={handleSelectStudentImage}
+          >
+            {formData.imageUrl ? (
+              <Image source={{ uri: formData.imageUrl }} style={styles.imagePreview} />
+            ) : (
+              <View style={styles.imagePlaceholder}>
+                <Ionicons name="image-outline" size={24} color="#94a3b8" />
+                <Text style={styles.imagePlaceholderText}>Tap to add student image</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+          
+          {formData.imageUrl ? (
+            <TouchableOpacity 
+              style={styles.removeImageButton}
+              onPress={() => setFormData({ ...formData, imageUrl: "" })}
+            >
+              <Text style={styles.removeImageText}>Remove Image</Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
 
         {/* Department Dropdown Modal */}
@@ -396,32 +424,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
               )}
             </View>
 
-            {/* Image Upload Section */}
-            <View style={styles.imageUploadContainer}>
-              <Text style={styles.imageLabel}>Installation Image (Optional)</Text>
-              <TouchableOpacity 
-                style={styles.imageUploadButton} 
-                onPress={() => handleSelectImage(index)}
-              >
-                {software.image ? (
-                  <Image source={{ uri: software.image }} style={styles.imagePreview} />
-                ) : (
-                  <View style={styles.imagePlaceholder}>
-                    <Ionicons name="image-outline" size={24} color="#94a3b8" />
-                    <Text style={styles.imagePlaceholderText}>Tap to add image</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-              
-              {software.image ? (
-                <TouchableOpacity 
-                  style={styles.removeImageButton}
-                  onPress={() => handleSoftwareChange(index, "image", "")}
-                >
-                  <Text style={styles.removeImageText}>Remove Image</Text>
-                </TouchableOpacity>
-              ) : null}
-            </View>
+            // Image field removed as per requirements
           </View>
         ))}
 
