@@ -44,7 +44,6 @@ export default function StudentsList({
   onDeleteStudent,
 }: StudentsListProps) {
   const [search, setSearch] = useState("");
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const router = useRouter();
 
   const filteredStudents = (students || []).filter(
@@ -53,8 +52,9 @@ export default function StudentsList({
       s.caddId.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Determine whether to show students based on search state
-  const shouldShowStudents = isSearchFocused && search.length > 0;
+  // Show students if there's a search term or if we have students to show
+  // This ensures filtered results stay visible even when search loses focus
+  const shouldShowStudents = search.length > 0 || students.length > 0;
 
   const handleStudentClick = (studentId: string) => {
     router.push(`/student/${studentId}`);
@@ -103,8 +103,6 @@ export default function StudentsList({
           placeholder="Search by name or ID"
           value={search}
           onChangeText={setSearch}
-          onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => setIsSearchFocused(false)}
           style={styles.searchInput}
         />
         {search.length > 0 && (
