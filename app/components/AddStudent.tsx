@@ -424,7 +424,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
               )}
             </View>
 
-            // Image field removed as per requirements
+{/* Image field removed as per requirements */}
           </View>
         ))}
 
