@@ -52,9 +52,9 @@ export default function StudentsList({
       s.caddId.toLowerCase().startsWith(search.toLowerCase())
   );
 
-  // Show students if there's a search term or if we have students to show
-  // This ensures filtered results stay visible even when search loses focus
-  const shouldShowStudents = search.length > 0 || students.length > 0;
+  // Show students only when there's a search term
+  // This ensures no students are displayed initially and results remain visible during interactions
+  const shouldShowStudents = search.length > 0;
 
   const handleStudentClick = (studentId: string) => {
     router.push(`/student/${studentId}`);
