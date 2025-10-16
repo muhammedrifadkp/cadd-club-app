@@ -15,6 +15,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import Logo from "./Logo";
 
 export interface InstalledSoftware {
   name: string;
@@ -207,7 +208,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>{studentToEdit ? "Edit Student" : "Add New Student"}</Text>
+        <Logo />
         <Text style={styles.headerSubText}>{studentToEdit ? "Update student details below" : "Enter student details below"}</Text>
       </View>
 

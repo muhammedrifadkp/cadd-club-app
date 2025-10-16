@@ -12,6 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import StudentCard from "./StudentCard";
+import Logo from "./Logo";
 
 export interface InstalledSoftware {
   name: string;
@@ -90,7 +91,7 @@ export default function StudentsList({
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>CADD Club Students</Text>
+        <Logo />
         <View style={styles.headerSubContainer}>
           <Text style={styles.headerSubText}>{students.length} students enrolled</Text>
         </View>
