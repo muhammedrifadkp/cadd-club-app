@@ -48,8 +48,8 @@ export default function StudentsList({
 
   const filteredStudents = (students || []).filter(
     (s) =>
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.caddId.toLowerCase().includes(search.toLowerCase())
+      s.name.toLowerCase().startsWith(search.toLowerCase()) ||
+      s.caddId.toLowerCase().startsWith(search.toLowerCase())
   );
 
   // Show students if there's a search term or if we have students to show
