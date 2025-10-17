@@ -1,11 +1,11 @@
 {
   "expo": {
-    "scheme": "reactNative",
-    "name": "reactNative",
-    "slug": "reactNative",
-    "version": "1.1.1",
+    "scheme": "caddclub",
+    "name": "Cadd Club",
+    "slug": "cadd-club",
+    "version": "1.2.2",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/appLogo.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -18,14 +18,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/appLogo.jpg",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.muhammedrifadkp.reactNative"
+      "package": "com.muhammedrifadkp.caddclub"
     },
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/appLogo.jpg",
       "bundler": "metro",
       "output": "static",
       "meta": {

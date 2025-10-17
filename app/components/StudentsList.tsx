@@ -50,7 +50,11 @@ export default function StudentsList({
   const filteredStudents = (students || []).filter(
     (s) =>
       s.name.toLowerCase().startsWith(search.toLowerCase()) ||
-      s.caddId.toLowerCase().startsWith(search.toLowerCase())
+      s.caddId.toLowerCase().startsWith(search.toLowerCase()) ||
+      s.department.toLowerCase().startsWith(search.toLowerCase()) ||
+      s.installedSoftware.some(software => 
+        software.name.toLowerCase().startsWith(search.toLowerCase())
+      )
   );
 
   // Show students only when there's a search term
@@ -101,7 +105,7 @@ export default function StudentsList({
       <View style={styles.searchBox}>
         <Ionicons name="search" size={20} color="#6b7280" />
         <TextInput
-          placeholder="Search by name or ID"
+          placeholder="Search by name, ID, department or software"
           value={search}
           onChangeText={setSearch}
           style={styles.searchInput}
