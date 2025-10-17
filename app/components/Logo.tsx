@@ -7,64 +7,54 @@ interface LogoProps {
 
 export default function Logo({ size = "medium" }: LogoProps) {
   const styles = getStyles(size);
-  
+
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Text style={styles.redC}>C</Text>
-        <Text style={styles.restText}>ADD</Text>
+      <View style={styles.iconBox}>
+        <Text style={styles.iconText}>C</Text>
       </View>
-      <Text style={styles.clubText}>Club</Text>
+      <Text style={styles.appName}>Cadd Club</Text>
     </View>
   );
 }
 
 const getStyles = (size: string) => {
   const sizeConfig = {
-    small: { fontSize: 16, padding: 4 },
-    medium: { fontSize: 22, padding: 6 },
-    large: { fontSize: 32, padding: 8 }
+    small: { boxSize: 50, fontSize: 28, textSize: 12 },
+    medium: { boxSize: 80, fontSize: 40, textSize: 16 },
+    large: { boxSize: 120, fontSize: 60, textSize: 22 },
   };
-  
+
   const config = sizeConfig[size] || sizeConfig.medium;
-  
+
   return StyleSheet.create({
     container: {
       alignItems: "center",
+      justifyContent: "center",
     },
-    logoContainer: {
-      flexDirection: "row",
+    iconBox: {
+      width: config.boxSize,
+      height: config.boxSize,
+      backgroundColor: "#2563eb", // Bright blue background
+      borderRadius: 20,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "#fff",
-      borderRadius: 8,
-      padding: config.padding,
-      elevation: 3,
       shadowColor: "#000",
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 6,
+      shadowOffset: { width: 0, height: 3 },
+      elevation: 4,
     },
-    redC: {
-      color: "#dc2626", // Red color for the C
+    iconText: {
+      color: "#fff", // White "C"
       fontSize: config.fontSize,
-      fontWeight: "800",
-      backgroundColor: "#dbeafe", // Light blue background
-      paddingHorizontal: 4,
-      paddingVertical: 2,
-      borderRadius: 4,
+      fontWeight: "900",
     },
-    restText: {
-      color: "#1e293b", // Dark gray for "ADD"
-      fontSize: config.fontSize,
+    appName: {
+      marginTop: 8,
+      color: "#1e293b", // Slate dark text
+      fontSize: config.textSize,
       fontWeight: "700",
-      marginLeft: 2,
-    },
-    clubText: {
-      color: "#64748b", // Medium gray for "Club"
-      fontSize: config.fontSize * 0.6,
-      fontWeight: "600",
-      marginTop: 2,
     },
   });
 };

@@ -25,11 +25,8 @@ export interface InstalledSoftware {
 export interface Student {
   id: string;
   name: string;
-  age: number;
   department: string;
-  course: string;
   caddId: string;
-  pcModel: string;
   imageUrl?: string; // Add student image property
   installedSoftware: InstalledSoftware[];
 }
@@ -42,11 +39,8 @@ interface AddStudentProps {
 export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
   const [formData, setFormData] = useState({
     name: "",
-    age: "",
     department: "",
-    course: "",
     caddId: "",
-    pcModel: "",
     imageUrl: "",
   });
 
@@ -74,11 +68,8 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     if (studentToEdit) {
       setFormData({
         name: studentToEdit.name,
-        age: studentToEdit.age.toString(),
         department: studentToEdit.department,
-        course: studentToEdit.course,
         caddId: studentToEdit.caddId,
-        pcModel: studentToEdit.pcModel,
         imageUrl: studentToEdit.imageUrl || "",
       });
       
@@ -176,11 +167,8 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     const newStudent: Student = {
       id: studentToEdit ? studentToEdit.id : Date.now().toString(),
       name: formData.name,
-      age: parseInt(formData.age),
       department: formData.department,
-      course: formData.course,
       caddId: formData.caddId,
-      pcModel: formData.pcModel,
       installedSoftware: validSoftware,
     };
 
@@ -190,11 +178,8 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
     if (!studentToEdit) {
       setFormData({
         name: "",
-        age: "",
         department: "",
-        course: "",
         caddId: "",
-        pcModel: "",
         imageUrl: "",
       });
       setSoftwareList([{ name: "", installDate: "" }]);
@@ -229,21 +214,6 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
           </View>
         </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Age (Optional)</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter age (optional)"
-              keyboardType="numeric"
-              value={formData.age}
-              onChangeText={(text) =>
-                setFormData({ ...formData, age: text })
-              }
-            />
-          </View>
-        </View>
-
         {/* Department Dropdown */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Department *</Text>
@@ -261,20 +231,6 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Course (Optional)</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter course name (optional)"
-              value={formData.course}
-              onChangeText={(text) =>
-                setFormData({ ...formData, course: text })
-              }
-            />
-          </View>
-        </View>
-
-        <View style={styles.inputGroup}>
           <Text style={styles.label}>CADD Club ID *</Text>
           <View style={styles.inputContainer}>
             <TextInput
@@ -283,20 +239,6 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
               value={formData.caddId}
               onChangeText={(text) =>
                 setFormData({ ...formData, caddId: text })
-              }
-            />
-          </View>
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>PC Model</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter PC model (optional)"
-              value={formData.pcModel}
-              onChangeText={(text) =>
-                setFormData({ ...formData, pcModel: text })
               }
             />
           </View>
@@ -604,15 +546,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fee2e2",
     borderRadius: 20,
     padding: 4,
-  },
-  imageUploadContainer: {
-    marginTop: 12,
-  },
-  imageLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1e293b",
-    marginBottom: 8,
   },
   imageUploadButton: {
     alignItems: "center",

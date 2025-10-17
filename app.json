@@ -5,7 +5,7 @@
     "slug": "cadd-club",
     "version": "1.2.2",
     "orientation": "portrait",
-    "icon": "./assets/appLogo.jpg",
+    "icon": "./assets/appLogo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -18,14 +18,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/appLogo.jpg",
+        "foregroundImage": "./assets/appLogo.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.muhammedrifadkp.caddclub"
     },
     "web": {
-      "favicon": "./assets/appLogo.jpg",
+      "favicon": "./assets/appLogo.png",
       "bundler": "metro",
       "output": "static",
       "meta": {
