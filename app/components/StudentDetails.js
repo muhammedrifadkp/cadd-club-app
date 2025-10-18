@@ -1,7 +1,7 @@
 // components/StudentDetails.js
 import React, { useState } from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { ArrowLeft, User, Calendar, Laptop, Monitor, Image as ImageIcon } from "lucide-react-native";
+import { ArrowLeft, User, Calendar, Laptop, Monitor } from "lucide-react-native";
 import ImageViewer from "./ImageViewer";
 
 const StudentDetails = ({ student, onBack }) => {
@@ -32,38 +32,23 @@ const StudentDetails = ({ student, onBack }) => {
         {/* Profile Section */}
         <View style={styles.profileCard}>
           <View style={styles.profileContainer}>
-            <View style={styles.avatar}>
-              <User color="#fff" size={40} />
-            </View>
+            {student.imageUrl ? (
+              <TouchableOpacity onPress={() => openImageViewer(student.imageUrl)}>
+                <Image 
+                  source={{ uri: student.imageUrl }} 
+                  style={styles.profileImage}
+                />
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.avatar}>
+                <User color="#fff" size={40} />
+              </View>
+            )}
             <Text style={styles.name}>{student.name}</Text>
             <Text style={styles.id}>ID: {student.caddId}</Text>
             <View style={styles.badgeContainer}>
-              <Text style={styles.badgeBlue}>{student.course}</Text>
+              <Text style={styles.badgeBlue}>{student.department}</Text>
             </View>
-          </View>
-        </View>
-
-        {/* Basic Information */}
-        <View style={styles.card}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Basic Information</Text>
-          </View>
-
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Age</Text>
-            <Text style={styles.value}>{student.age} years</Text>
-          </View>
-
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Department</Text>
-            <Text style={styles.badgeGray}>{student.department}</Text>
-          </View>
-
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>PC Model</Text>
-            <Text style={styles.value}>
-              {student.pcModel || "Not specified"}
-            </Text>
           </View>
         </View>
 
@@ -99,25 +84,6 @@ const StudentDetails = ({ student, onBack }) => {
                         day: "numeric",
                       })}
                     </Text>
-                  </View>
-                )}
-                
-                {/* Display image if available */}
-                {software.image ? (
-                  <View style={styles.imageContainer}>
-                    <Text style={styles.imageLabel}>Installation Screenshot:</Text>
-                    <TouchableOpacity onPress={() => openImageViewer(software.image)}>
-                      <Image 
-                        source={{ uri: software.image }} 
-                        style={styles.softwareImage}
-                        resizeMode="cover"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View style={styles.noImageContainer}>
-                    <ImageIcon color="#94a3b8" size={16} />
-                    <Text style={styles.noImageText}>No installation image provided</Text>
                   </View>
                 )}
               </View>
@@ -178,6 +144,14 @@ const styles = StyleSheet.create({
   profileContainer: {
     alignItems: "center",
   },
+  profileImage: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    marginBottom: 16,
+    borderWidth: 3,
+    borderColor: "#dbeafe",
+  },
   avatar: {
     width: 90,
     height: 90,
@@ -207,16 +181,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  sectionHeader: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
-    paddingBottom: 10,
-    marginBottom: 12,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#0f172a",
+  badgeBlue: {
+    backgroundColor: "#dbeafe",
+    color: "#1d4ed8",
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 20,
+    fontSize: 14,
+    fontWeight: "600",
+    borderWidth: 1,
+    borderColor: "#93c5fd",
   },
   card: {
     backgroundColor: "#fff",
@@ -228,43 +202,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
-  },
-  infoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f3f4f6",
-  },
-  label: {
-    color: "#64748b",
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  value: {
-    color: "#0f172a",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  badgeGray: {
-    backgroundColor: "#f3f4f6",
-    color: "#374151",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  badgeBlue: {
-    backgroundColor: "#dbeafe",
-    color: "#1d4ed8",
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
-    fontSize: 14,
-    fontWeight: "600",
-    borderWidth: 1,
-    borderColor: "#93c5fd",
   },
   softwareHeader: {
     flexDirection: "row",
@@ -327,35 +264,6 @@ const styles = StyleSheet.create({
   softwareDateText: {
     color: "#475569",
     fontSize: 14,
-  },
-  imageContainer: {
-    marginTop: 10,
-  },
-  imageLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1e293b",
-    marginBottom: 6,
-  },
-  softwareImage: {
-    width: "100%",
-    height: 150,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#cbd5e1",
-  },
-  noImageContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-    padding: 8,
-    backgroundColor: "#f1f5f9",
-    borderRadius: 6,
-  },
-  noImageText: {
-    color: "#94a3b8",
-    fontSize: 13,
-    marginLeft: 6,
   },
 });
 

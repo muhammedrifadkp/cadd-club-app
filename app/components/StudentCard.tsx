@@ -6,7 +6,6 @@ import { Ionicons } from "@expo/vector-icons";
 interface StudentCardProps {
   name: string;
   caddId: string;
-  course: string;
   department: string;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -15,7 +14,6 @@ interface StudentCardProps {
 export default function StudentCard({
   name,
   caddId,
-  course,
   department,
   onEdit,
   onDelete,
@@ -33,9 +31,6 @@ export default function StudentCard({
           <Text style={styles.caddId}>ID: {caddId}</Text>
 
           <View style={styles.tags}>
-            <View style={[styles.tag, styles.courseTag]}>
-              <Text style={styles.tagText}>{course}</Text>
-            </View>
             <View style={[styles.tag, styles.deptTag]}>
               <Text style={styles.tagText}>{department}</Text>
             </View>
@@ -113,11 +108,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 6,
     marginTop: 4,
-  },
-  courseTag: { 
-    backgroundColor: "#dbeafe",
-    borderWidth: 1,
-    borderColor: "#93c5fd"
   },
   deptTag: { 
     backgroundColor: "#f1f5f9",

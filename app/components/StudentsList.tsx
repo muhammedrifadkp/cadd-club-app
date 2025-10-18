@@ -23,11 +23,8 @@ export interface InstalledSoftware {
 export interface Student {
   id: string;
   name: string;
-  age: number;
   department: string;
-  course: string;
   caddId: string;
-  pcModel: string;
   installedSoftware: InstalledSoftware[];
 }
 
@@ -128,7 +125,6 @@ export default function StudentsList({
                 <StudentCard
                   name={item.name}
                   caddId={item.caddId}
-                  course={item.course}
                   department={item.department}
                   onEdit={() => handleEditStudent(item)}
                   onDelete={() => handleDeleteStudent(item)}

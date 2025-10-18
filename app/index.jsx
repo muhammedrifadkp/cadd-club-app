@@ -9,11 +9,8 @@ const mockStudents = [
   {
     id: "1",
     name: "Rahul Sharma",
-    age: 21,
-    department: "Computer Science",
-    course: "AutoCAD Advanced",
+    department: "CADD",
     caddId: "CADD2024001",
-    pcModel: "Dell Optiplex 7090",
     installedSoftware: [
       { name: "AutoCAD 2024", installDate: "2024-01-15", image: "" },
       { name: "SolidWorks 2023", installDate: "2024-02-10", image: "" },
@@ -22,11 +19,8 @@ const mockStudents = [
   {
     id: "2",
     name: "Priya Patel",
-    age: 20,
-    department: "Mechanical Engineering",
-    course: "SolidWorks Fundamentals",
+    department: "LIVE WIRE",
     caddId: "CADD2024002",
-    pcModel: "HP EliteDesk 800",
     installedSoftware: [
       { name: "SolidWorks 2023", installDate: "2024-01-20", image: "" },
       { name: "CATIA V5", installDate: "2024-03-05", image: "" },

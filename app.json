@@ -2,8 +2,8 @@
   "expo": {
     "scheme": "caddclub",
     "name": "Cadd Club",
-    "slug": "cadd-club",
-    "version": "1.2.2",
+    "slug": "reactNative",
+    "version": "1.2.3",
     "orientation": "portrait",
     "icon": "./assets/appLogo.png",
     "userInterfaceStyle": "light",

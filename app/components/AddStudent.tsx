@@ -20,6 +20,7 @@ import Logo from "./Logo";
 export interface InstalledSoftware {
   name: string;
   installDate: string;
+  image?: string; // Add image property
 }
 
 export interface Student {
@@ -427,45 +428,52 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#d1d5db",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    shadowOffset: { width: 0, height: 1 },
+    borderColor: "#e5e7eb",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  input: {
+    fontSize: 16,
+    color: "#1e293b",
+  },
+  placeholderText: {
+    color: "#94a3b8",
   },
   dropdownContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 12,
   },
-  placeholderText: {
-    color: "#94a3b8",
-  },
-  dateInputContainer: {
+  imageUploadButton: {
     backgroundColor: "#fff",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#d1d5db",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    shadowOffset: { width: 0, height: 1 },
-    flexDirection: "row",
+    borderColor: "#e5e7eb",
+    padding: 16,
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingRight: 14,
+    justifyContent: "center",
+    minHeight: 120,
   },
-  calendarIcon: {
-    marginLeft: 10,
+  imagePreview: {
+    width: "100%",
+    height: 120,
+    borderRadius: 12,
   },
-  input: {
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: "#1e293b",
-    flex: 1,
+  imagePlaceholder: {
+    alignItems: "center",
+  },
+  imagePlaceholderText: {
+    color: "#94a3b8",
+    marginTop: 8,
+    fontSize: 14,
+  },
+  removeImageButton: {
+    marginTop: 8,
+    alignItems: "center",
+  },
+  removeImageText: {
+    color: "#dc2626",
+    fontWeight: "600",
   },
   modalOverlay: {
     flex: 1,
@@ -475,14 +483,14 @@ const styles = StyleSheet.create({
   },
   dropdownModal: {
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 16,
     width: "80%",
-    maxHeight: "50%",
-    elevation: 5,
+    maxHeight: "60%",
+    elevation: 10,
     shadowColor: "#000",
     shadowOpacity: 0.2,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
   },
   dropdownHeader: {
     flexDirection: "row",
@@ -494,7 +502,7 @@ const styles = StyleSheet.create({
   },
   dropdownTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "700",
     color: "#0f172a",
   },
   dropdownItem: {
@@ -503,118 +511,96 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#f1f5f9",
+    borderBottomColor: "#f3f4f6",
   },
   dropdownItemText: {
     fontSize: 16,
     color: "#1e293b",
   },
   sectionHeader: {
-    marginTop: 10,
     marginBottom: 16,
+    marginTop: 8,
   },
-  sectionTitle: { 
-    fontSize: 18, 
-    fontWeight: "700", 
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
     color: "#0f172a",
-    marginBottom: 4
+    marginBottom: 4,
   },
   sectionSubtitle: {
     fontSize: 14,
     color: "#64748b",
   },
   softwareBox: {
-    backgroundColor: "#eff6ff",
-    padding: 14,
-    borderRadius: 12,
-    marginVertical: 8,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: "#93c5fd",
+    borderColor: "#e5e7eb",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
   softwareHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 12,
   },
-  softwareTitle: { 
-    color: "#1e40af", 
-    fontSize: 15, 
-    fontWeight: "600" 
+  softwareTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#0f172a",
   },
   removeBtn: {
-    backgroundColor: "#fee2e2",
-    borderRadius: 20,
     padding: 4,
   },
-  imageUploadButton: {
+  dateInputContainer: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#fff",
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 8,
-    padding: 16,
-    backgroundColor: "#f8fafc",
+    borderColor: "#e5e7eb",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
-  imagePreview: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-  },
-  imagePlaceholder: {
-    alignItems: "center",
-  },
-  imagePlaceholderText: {
-    marginTop: 8,
-    color: "#94a3b8",
-    fontSize: 14,
-  },
-  removeImageButton: {
-    alignSelf: "flex-end",
-    marginTop: 8,
-  },
-  removeImageText: {
-    color: "#dc2626",
-    fontSize: 14,
-    fontWeight: "600",
+  calendarIcon: {
+    marginLeft: 8,
   },
   addSoftwareBtn: {
     flexDirection: "row",
     alignItems: "center",
-    borderColor: "#93c5fd",
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 14,
     justifyContent: "center",
-    marginTop: 8,
-    backgroundColor: "#fff",
+    backgroundColor: "#eff6ff",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#93c5fd",
   },
-  addSoftwareText: { 
-    color: "#3b82f6", 
-    fontWeight: "600", 
+  addSoftwareText: {
+    color: "#3b82f6",
+    fontWeight: "600",
+    fontSize: 16,
     marginLeft: 8,
-    fontSize: 16
   },
   saveBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#3b82f6",
     borderRadius: 12,
     padding: 16,
-    marginTop: 25,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    marginBottom: 20,
+    marginBottom: 16,
   },
   saveText: {
     color: "#fff",
-    textAlign: "center",
     fontWeight: "700",
-    fontSize: 17,
+    fontSize: 16,
     marginRight: 8,
   },
 });
