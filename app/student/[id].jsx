@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import StudentDetails from "../components/StudentDetails";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { Alert } from "react-native";
 
 export default function StudentDetailsScreen() {
   const { id } = useLocalSearchParams();
@@ -19,7 +20,7 @@ export default function StudentDetailsScreen() {
         if (savedStudents) {
           const parsedStudents = JSON.parse(savedStudents);
           setStudents(parsedStudents);
-          
+
           // Find the student with the matching ID
           const foundStudent = parsedStudents.find(s => s.id === id);
           setStudent(foundStudent);
@@ -33,6 +34,33 @@ export default function StudentDetailsScreen() {
 
   const handleBackToList = () => {
     router.push('/students');
+  };
+
+  const handleEdit = () => {
+    router.push(`/edit-student/${id}`);
+  };
+
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete Student",
+      `Are you sure you want to delete ${student.name}? This action cannot be undone.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const updatedStudents = students.filter(s => s.id !== id);
+              await AsyncStorage.setItem("caddClubStudents", JSON.stringify(updatedStudents));
+              router.push('/students');
+            } catch (error) {
+              console.log("Error deleting student:", error);
+            }
+          }
+        }
+      ]
+    );
   };
 
   if (!student) {
@@ -49,7 +77,7 @@ export default function StudentDetailsScreen() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      <StudentDetails student={student} onBack={handleBackToList} />
+      <StudentDetails student={student} onBack={handleBackToList} onEdit={handleEdit} onDelete={handleDelete} />
     </View>
   );
 }

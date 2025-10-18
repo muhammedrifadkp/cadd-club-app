@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f1f5f9",
-    paddingBottom: 80, // Space for bottom navigation
+    // Add Student screen has slightly larger bottom padding to emphasize space
+    paddingBottom: 100,
   },
 });

@@ -50,9 +50,9 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
   ]);
 
   // State for date picker visibility
-  const [showDatePicker, setShowDatePicker] = useState<{[key: number]: boolean}>({});
+  const [showDatePicker, setShowDatePicker] = useState<{ [key: number]: boolean }>({});
   const [selectedDateIndex, setSelectedDateIndex] = useState<number | null>(null);
-  
+
   // State for department dropdown
   const [showDepartmentDropdown, setShowDepartmentDropdown] = useState(false);
 
@@ -73,7 +73,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
         caddId: studentToEdit.caddId,
         imageUrl: studentToEdit.imageUrl || "",
       });
-      
+
       if (studentToEdit.installedSoftware && studentToEdit.installedSoftware.length > 0) {
         setSoftwareList(studentToEdit.installedSoftware);
       }
@@ -111,11 +111,11 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
   // Function to handle date change for software installation
   const handleDateChange = (event: any, selectedDate?: Date) => {
     if (selectedDateIndex === null) return;
-    
+
     if (selectedDate) {
       handleSoftwareChange(selectedDateIndex, "installDate", formatDate(selectedDate));
     }
-    
+
     // Hide the date picker
     setShowDatePicker(prev => ({ ...prev, [selectedDateIndex]: false }));
     setSelectedDateIndex(null);
@@ -131,12 +131,12 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
   const handleSelectStudentImage = async () => {
     // Request permission to access media library
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+
     if (permissionResult.granted === false) {
       Alert.alert("Permission required", "Permission to access camera roll is required!");
       return;
     }
-    
+
     // Launch image picker
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -144,10 +144,94 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
       aspect: [4, 3],
       quality: 1,
     });
-    
+
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const selectedImage = result.assets[0];
       setFormData({ ...formData, imageUrl: selectedImage.uri });
+    }
+  };
+
+  // New: show modal to choose between camera or gallery
+  const [showImageOptions, setShowImageOptions] = useState(false);
+
+  const handlePickFromGallery = async () => {
+    setShowImageOptions(false);
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission required", "Permission to access camera roll is required!");
+      return;
+    }
+
+    // default: free (no crop)
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const selectedImage = result.assets[0];
+      setFormData({ ...formData, imageUrl: selectedImage.uri });
+    }
+  };
+
+  const handleTakePhoto = async () => {
+    setShowImageOptions(false);
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission required", "Permission to access the camera is required to take photos.");
+      return;
+    }
+
+    // default: free (no crop)
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const capturedImage = result.assets[0];
+      setFormData({ ...formData, imageUrl: capturedImage.uri });
+    }
+  };
+
+  // Crop variants: allow editing (user can crop). No forced aspect to let user choose.
+  const handlePickFromGalleryCrop = async () => {
+    setShowImageOptions(false);
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission required", "Permission to access camera roll is required!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const selectedImage = result.assets[0];
+      setFormData({ ...formData, imageUrl: selectedImage.uri });
+    }
+  };
+
+  const handleTakePhotoCrop = async () => {
+    setShowImageOptions(false);
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission required", "Permission to access the camera is required to take photos.");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const capturedImage = result.assets[0];
+      setFormData({ ...formData, imageUrl: capturedImage.uri });
     }
   };
 
@@ -170,11 +254,12 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
       name: formData.name,
       department: formData.department,
       caddId: formData.caddId,
+      imageUrl: formData.imageUrl, // persist selected student image
       installedSoftware: validSoftware,
     };
 
     onSave(newStudent);
-    
+
     // Reset form only when adding a new student, not when editing
     if (!studentToEdit) {
       setFormData({
@@ -218,7 +303,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
         {/* Department Dropdown */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Department *</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.inputContainer}
             onPress={() => setShowDepartmentDropdown(true)}
           >
@@ -248,9 +333,9 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
         {/* Student Image Upload Section */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Student Image (Optional)</Text>
-          <TouchableOpacity 
-            style={styles.imageUploadButton} 
-            onPress={handleSelectStudentImage}
+          <TouchableOpacity
+            style={styles.imageUploadButton}
+            onPress={() => setShowImageOptions(true)}
           >
             {formData.imageUrl ? (
               <Image source={{ uri: formData.imageUrl }} style={styles.imagePreview} />
@@ -261,9 +346,9 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
               </View>
             )}
           </TouchableOpacity>
-          
+
           {formData.imageUrl ? (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.removeImageButton}
               onPress={() => setFormData({ ...formData, imageUrl: "" })}
             >
@@ -272,6 +357,35 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
           ) : null}
         </View>
 
+        {/* Image options modal (camera or gallery) */}
+        <Modal
+          visible={showImageOptions}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowImageOptions(false)}
+        >
+          <TouchableOpacity style={styles.modalOverlay} onPress={() => setShowImageOptions(false)} activeOpacity={1}>
+            <View style={styles.imageOptionsContainer}>
+              <Text style={styles.imageOptionsTitle}>Add Student Image</Text>
+              {/* <TouchableOpacity style={styles.imageOption} onPress={handleTakePhoto}>
+                <Text style={styles.imageOptionText}>Take Photo (no crop)</Text>
+              </TouchableOpacity> */}
+              <TouchableOpacity style={styles.imageOption} onPress={handleTakePhotoCrop}>
+                <Text style={styles.imageOptionText}>Take Photo</Text>
+              </TouchableOpacity>
+              {/* <TouchableOpacity style={styles.imageOption} onPress={handlePickFromGallery}>
+                <Text style={styles.imageOptionText}>Choose from Gallery (no crop)</Text>
+              </TouchableOpacity> */}
+              <TouchableOpacity style={styles.imageOption} onPress={handlePickFromGalleryCrop}>
+                <Text style={styles.imageOptionText}>Choose from Gallery</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.imageOptionCancel} onPress={() => setShowImageOptions(false)}>
+                <Text style={styles.imageOptionCancelText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
         {/* Department Dropdown Modal */}
         <Modal
           visible={showDepartmentDropdown}
@@ -279,8 +393,8 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
           animationType="fade"
           onRequestClose={() => setShowDepartmentDropdown(false)}
         >
-          <TouchableOpacity 
-            style={styles.modalOverlay} 
+          <TouchableOpacity
+            style={styles.modalOverlay}
             onPress={() => setShowDepartmentDropdown(false)}
             activeOpacity={1}
           >
@@ -315,7 +429,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
           <Text style={styles.sectionTitle}>Installed Software</Text>
           <Text style={styles.sectionSubtitle}>Add software installed on student's PC</Text>
         </View>
-        
+
         {softwareList.map((software, index) => (
           <View key={index} style={styles.softwareBox}>
             <View style={styles.softwareHeader}>
@@ -340,11 +454,11 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
                 }
               />
             </View>
-            
+
             {/* Date Input with Calendar Picker */}
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Install Date</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.dateInputContainer}
                 onPress={() => openDatePicker(index)}
               >
@@ -356,7 +470,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
                 />
                 <Ionicons name="calendar" size={20} color="#6b7280" style={styles.calendarIcon} />
               </TouchableOpacity>
-              
+
               {/* Date picker - only show for the selected index */}
               {showDatePicker[index] && (
                 <DateTimePicker
@@ -368,7 +482,7 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
               )}
             </View>
 
-{/* Image field removed as per requirements */}
+            {/* Image field removed as per requirements */}
           </View>
         ))}
 
@@ -388,9 +502,9 @@ export default function AddStudent({ onSave, studentToEdit }: AddStudentProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: "#f1f5f9" 
+  container: {
+    flex: 1,
+    backgroundColor: "#f1f5f9"
   },
   header: {
     backgroundColor: "#2563eb",
@@ -401,28 +515,28 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingBottom: 25,
   },
-  headerText: { 
-    color: "#fff", 
-    fontSize: 22, 
+  headerText: {
+    color: "#fff",
+    fontSize: 22,
     fontWeight: "700",
     marginBottom: 4
   },
-  headerSubText: { 
-    color: "#e0f2fe", 
+  headerSubText: {
+    color: "#e0f2fe",
     fontSize: 14
   },
-  form: { 
-    padding: 16, 
-    paddingBottom: 100 
+  form: {
+    padding: 16,
+    paddingBottom: 100
   },
-  inputGroup: { 
-    marginBottom: 16 
+  inputGroup: {
+    marginBottom: 16
   },
-  label: { 
-    fontSize: 15, 
-    fontWeight: "600", 
-    color: "#1e293b", 
-    marginBottom: 6 
+  label: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#1e293b",
+    marginBottom: 6
   },
   inputContainer: {
     backgroundColor: "#fff",
@@ -602,5 +716,40 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16,
     marginRight: 8,
+  },
+  imageOptionsContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    width: "90%",
+    alignSelf: "center",
+  },
+  imageOptionsTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#0f172a",
+    marginBottom: 12,
+    textAlign: "center",
+  },
+  imageOption: {
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: "#f1f5f9",
+    alignItems: "center",
+  },
+  imageOptionText: {
+    fontSize: 16,
+    color: "#2563eb",
+    fontWeight: "600",
+  },
+  imageOptionCancel: {
+    paddingVertical: 12,
+    marginTop: 6,
+    alignItems: "center",
+  },
+  imageOptionCancelText: {
+    fontSize: 16,
+    color: "#ef4444",
+    fontWeight: "700",
   },
 });

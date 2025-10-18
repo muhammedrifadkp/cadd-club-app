@@ -4,7 +4,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from "rea
 import { ArrowLeft, User, Calendar, Laptop, Monitor } from "lucide-react-native";
 import ImageViewer from "./ImageViewer";
 
-const StudentDetails = ({ student, onBack }) => {
+const StudentDetails = ({ student, onBack, onEdit, onDelete }) => {
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -21,7 +21,7 @@ const StudentDetails = ({ student, onBack }) => {
   // Function to format date properly
   const formatInstallDate = (dateString) => {
     if (!dateString) return "";
-    
+
     try {
       // Handle different date formats
       const date = new Date(dateString);
@@ -43,7 +43,7 @@ const StudentDetails = ({ student, onBack }) => {
         }
         return dateString; // Return original string if parsing fails
       }
-      
+
       return date.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
@@ -78,6 +78,7 @@ const StudentDetails = ({ student, onBack }) => {
             </View>
           </View>
         </View>
+        {/* (buttons moved below image section) */}
 
         {/* Installed Software */}
         <View style={styles.card}>
@@ -87,8 +88,8 @@ const StudentDetails = ({ student, onBack }) => {
           </View>
 
           {!student.installedSoftware ||
-          !Array.isArray(student.installedSoftware) ||
-          student.installedSoftware.length === 0 ? (
+            !Array.isArray(student.installedSoftware) ||
+            student.installedSoftware.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Monitor color="#94a3b8" size={32} />
               <Text style={styles.emptyText}>No software installed</Text>
@@ -118,15 +119,15 @@ const StudentDetails = ({ student, onBack }) => {
           <View style={styles.imageSectionHeader}>
             <Text style={styles.imageSectionTitle}>Student Image</Text>
           </View>
-          
+
           {/* Display image if available, otherwise show empty bordered box */}
           {student.imageUrl && student.imageUrl.trim() !== "" ? (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.imageContainer}
               onPress={() => openImageViewer(student.imageUrl)}
             >
-              <Image 
-                source={{ uri: student.imageUrl }} 
+              <Image
+                source={{ uri: student.imageUrl }}
                 style={styles.studentImage}
                 resizeMode="cover"
               />
@@ -137,13 +138,26 @@ const StudentDetails = ({ student, onBack }) => {
             </View>
           )}
         </View>
+        {/* Action buttons: Edit / Delete (placed after image) */}
+        <View style={styles.actionRow}>
+          {onEdit && (
+            <TouchableOpacity style={styles.editButton} onPress={onEdit}>
+              <Text style={styles.actionText}>Edit</Text>
+            </TouchableOpacity>
+          )}
+          {onDelete && (
+            <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+              <Text style={styles.actionText}>Delete</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
-      
+
       {/* Image Viewer Modal */}
-      <ImageViewer 
-        visible={imageViewerVisible} 
-        imageUri={selectedImage} 
-        onClose={closeImageViewer} 
+      <ImageViewer
+        visible={imageViewerVisible}
+        imageUri={selectedImage}
+        onClose={closeImageViewer}
       />
     </View>
   );
@@ -340,6 +354,47 @@ const styles = StyleSheet.create({
     color: "#94a3b8",
     fontSize: 16,
     fontWeight: "500",
+  },
+  actionRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 16,
+    marginBottom: 24,
+    paddingHorizontal: 8,
+    gap: 12,
+  },
+  editButton: {
+    flex: 1,
+    backgroundColor: "#3b82f6",
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+    shadowColor: "#3b82f6",
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+  },
+  deleteButton: {
+    flex: 1,
+    backgroundColor: "#ef4444",
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 8,
+    shadowColor: "#ef4444",
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+  },
+  actionText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });
 

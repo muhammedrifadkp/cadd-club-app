@@ -44,15 +44,18 @@ export default function StudentsList({
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  const filteredStudents = (students || []).filter(
-    (s) =>
-      s.name.toLowerCase().startsWith(search.toLowerCase()) ||
-      s.caddId.toLowerCase().startsWith(search.toLowerCase()) ||
-      s.department.toLowerCase().startsWith(search.toLowerCase()) ||
-      s.installedSoftware.some(software => 
-        software.name.toLowerCase().startsWith(search.toLowerCase())
-      )
-  );
+  const q = search.trim().toLowerCase();
+
+  const filteredStudents = (students || []).filter((s) => {
+    if (!q) return false;
+    const nameMatch = s.name.toLowerCase().includes(q);
+    const idMatch = s.caddId.toLowerCase().includes(q); // match anywhere in ID
+    const deptMatch = s.department.toLowerCase().includes(q);
+    const softwareMatch = s.installedSoftware.some((software) =>
+      software.name.toLowerCase().includes(q)
+    );
+    return nameMatch || idMatch || deptMatch || softwareMatch;
+  });
 
   // Show students only when there's a search term
   // This ensures no students are displayed initially and results remain visible during interactions
@@ -151,19 +154,19 @@ export default function StudentsList({
       )}
 
       {/* Add Button */}
-      {onAddClick && (
+      {/* {onAddClick && (
         <TouchableOpacity style={styles.addBtn} onPress={onAddClick}>
           <Ionicons name="add" size={28} color="#fff" />
         </TouchableOpacity>
-      )}
+      )} */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: "#f1f5f9" 
+  container: {
+    flex: 1,
+    backgroundColor: "#f1f5f9"
   },
   header: {
     backgroundColor: "#2563eb",
@@ -174,9 +177,9 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingBottom: 25,
   },
-  headerText: { 
-    color: "#fff", 
-    fontSize: 22, 
+  headerText: {
+    color: "#fff",
+    fontSize: 22,
     fontWeight: "700",
     marginBottom: 4
   },
@@ -186,9 +189,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
-  headerSubText: { 
-    color: "#e0f2fe", 
-    fontSize: 14, 
+  headerSubText: {
+    color: "#e0f2fe",
+    fontSize: 14,
     fontWeight: "500"
   },
   searchBox: {
