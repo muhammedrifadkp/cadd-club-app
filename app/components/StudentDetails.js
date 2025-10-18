@@ -18,6 +18,42 @@ const StudentDetails = ({ student, onBack }) => {
     setSelectedImage(null);
   };
 
+  // Function to format date properly
+  const formatInstallDate = (dateString) => {
+    if (!dateString) return "";
+    
+    try {
+      // Handle different date formats
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        // If standard parsing fails, try to parse YYYY-MM-DD format
+        const parts = dateString.split('-');
+        if (parts.length === 3) {
+          const year = parseInt(parts[0], 10);
+          const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
+          const day = parseInt(parts[2], 10);
+          const parsedDate = new Date(year, month, day);
+          if (!isNaN(parsedDate.getTime())) {
+            return parsedDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+          }
+        }
+        return dateString; // Return original string if parsing fails
+      }
+      
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      return dateString; // Return original string if any error occurs
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -32,18 +68,9 @@ const StudentDetails = ({ student, onBack }) => {
         {/* Profile Section */}
         <View style={styles.profileCard}>
           <View style={styles.profileContainer}>
-            {student.imageUrl ? (
-              <TouchableOpacity onPress={() => openImageViewer(student.imageUrl)}>
-                <Image 
-                  source={{ uri: student.imageUrl }} 
-                  style={styles.profileImage}
-                />
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.avatar}>
-                <User color="#fff" size={40} />
-              </View>
-            )}
+            <View style={styles.avatar}>
+              <User color="#fff" size={40} />
+            </View>
             <Text style={styles.name}>{student.name}</Text>
             <Text style={styles.id}>ID: {student.caddId}</Text>
             <View style={styles.badgeContainer}>
@@ -77,17 +104,37 @@ const StudentDetails = ({ student, onBack }) => {
                   <View style={styles.softwareDate}>
                     <Calendar color="#6b7280" size={16} />
                     <Text style={styles.softwareDateText}>
-                      Installed:{" "}
-                      {new Date(software.installDate).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                      Installed: {formatInstallDate(software.installDate)}
                     </Text>
                   </View>
                 )}
               </View>
             ))
+          )}
+        </View>
+
+        {/* Student Image Section - Always visible */}
+        <View style={styles.card}>
+          <View style={styles.imageSectionHeader}>
+            <Text style={styles.imageSectionTitle}>Student Image</Text>
+          </View>
+          
+          {/* Display image if available, otherwise show empty bordered box */}
+          {student.imageUrl && student.imageUrl.trim() !== "" ? (
+            <TouchableOpacity 
+              style={styles.imageContainer}
+              onPress={() => openImageViewer(student.imageUrl)}
+            >
+              <Image 
+                source={{ uri: student.imageUrl }} 
+                style={styles.studentImage}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.emptyImageContainer}>
+              <Text style={styles.emptyImageText}>No image available</Text>
+            </View>
           )}
         </View>
       </ScrollView>
@@ -143,14 +190,6 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     alignItems: "center",
-  },
-  profileImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    marginBottom: 16,
-    borderWidth: 3,
-    borderColor: "#dbeafe",
   },
   avatar: {
     width: 90,
@@ -264,6 +303,43 @@ const styles = StyleSheet.create({
   softwareDateText: {
     color: "#475569",
     fontSize: 14,
+  },
+  imageSectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 16,
+  },
+  imageSectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#0f172a",
+  },
+  imageContainer: {
+    alignItems: "center",
+  },
+  studentImage: {
+    width: "100%",
+    height: 200,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#cbd5e1",
+  },
+  emptyImageContainer: {
+    width: "100%",
+    height: 200,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#cbd5e1",
+    borderStyle: "dashed",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f8fafc",
+  },
+  emptyImageText: {
+    color: "#94a3b8",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
 

@@ -3,7 +3,7 @@
     "scheme": "caddclub",
     "name": "Cadd Club",
     "slug": "reactNative",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "orientation": "portrait",
     "icon": "./assets/appLogo.png",
     "userInterfaceStyle": "light",
