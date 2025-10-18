@@ -20,7 +20,7 @@ export default function StudentDetailsScreen() {
         if (savedStudents) {
           const parsedStudents = JSON.parse(savedStudents);
           setStudents(parsedStudents);
-
+          
           // Find the student with the matching ID
           const foundStudent = parsedStudents.find(s => s.id === id);
           setStudent(foundStudent);

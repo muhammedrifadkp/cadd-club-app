@@ -1,15 +1,11 @@
+// components/BottomNav.js
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { Users, Plus } from "lucide-react-native";
 
 const BottomNav = ({ activeTab, onTabChange }) => {
-  const containerStyle = [
-    styles.container,
-    activeTab === "add" ? styles.containerAddActive : null,
-  ];
-
   return (
-    <View style={containerStyle}>
+    <View style={styles.container}>
       {/* Students Button */}
       <TouchableOpacity
         style={[styles.tab, activeTab === "students" && styles.activeTab]}
@@ -18,7 +14,7 @@ const BottomNav = ({ activeTab, onTabChange }) => {
       >
         <Users
           color={activeTab === "students" ? "#3b82f6" : "#94a3b8"}
-          size={24}
+          size={35}
           strokeWidth={activeTab === "students" ? 2.5 : 2}
         />
         <Text
@@ -38,11 +34,7 @@ const BottomNav = ({ activeTab, onTabChange }) => {
         onPress={() => onTabChange("add")}
         activeOpacity={0.7}
       >
-        <View
-          style={
-            activeTab === "add" ? styles.addButtonActive : styles.addButton
-          }
-        >
+        <View style={activeTab === "add" ? styles.addButtonActive : styles.addButton}>
           <Plus
             color={activeTab === "add" ? "#fff" : "#3b82f6"}
             size={24}
@@ -73,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopWidth: 1,
     borderTopColor: "#e2e8f0",
-    height: 140, // fixed height
+    paddingVertical: 0,
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -83,10 +75,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: -4 },
+    paddingBottom: 20,
     zIndex: 100,
-  },
-  containerAddActive: {
-    height: 80, // same height for add page
+    height:160
   },
   tab: {
     alignItems: "center",
@@ -94,7 +85,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 8,
-    bottom: 20
   },
   activeTab: {
     backgroundColor: "#f8fafc",
@@ -118,8 +108,8 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   addButton: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     borderRadius: 22,
     backgroundColor: "#f1f5f9",
     alignItems: "center",
@@ -128,8 +118,8 @@ const styles = StyleSheet.create({
     borderColor: "#e2e8f0",
   },
   addButtonActive: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     borderRadius: 25,
     backgroundColor: "#3b82f6",
     alignItems: "center",

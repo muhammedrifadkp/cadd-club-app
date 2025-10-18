@@ -21,7 +21,7 @@ const StudentDetails = ({ student, onBack, onEdit, onDelete }) => {
   // Function to format date properly
   const formatInstallDate = (dateString) => {
     if (!dateString) return "";
-
+    
     try {
       // Handle different date formats
       const date = new Date(dateString);
@@ -43,7 +43,7 @@ const StudentDetails = ({ student, onBack, onEdit, onDelete }) => {
         }
         return dateString; // Return original string if parsing fails
       }
-
+      
       return date.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
@@ -88,8 +88,8 @@ const StudentDetails = ({ student, onBack, onEdit, onDelete }) => {
           </View>
 
           {!student.installedSoftware ||
-            !Array.isArray(student.installedSoftware) ||
-            student.installedSoftware.length === 0 ? (
+          !Array.isArray(student.installedSoftware) ||
+          student.installedSoftware.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Monitor color="#94a3b8" size={32} />
               <Text style={styles.emptyText}>No software installed</Text>
@@ -119,15 +119,15 @@ const StudentDetails = ({ student, onBack, onEdit, onDelete }) => {
           <View style={styles.imageSectionHeader}>
             <Text style={styles.imageSectionTitle}>Student Image</Text>
           </View>
-
+          
           {/* Display image if available, otherwise show empty bordered box */}
           {student.imageUrl && student.imageUrl.trim() !== "" ? (
-            <TouchableOpacity
+            <TouchableOpacity 
               style={styles.imageContainer}
               onPress={() => openImageViewer(student.imageUrl)}
             >
-              <Image
-                source={{ uri: student.imageUrl }}
+              <Image 
+                source={{ uri: student.imageUrl }} 
                 style={styles.studentImage}
                 resizeMode="cover"
               />
@@ -152,12 +152,12 @@ const StudentDetails = ({ student, onBack, onEdit, onDelete }) => {
           )}
         </View>
       </ScrollView>
-
+      
       {/* Image Viewer Modal */}
-      <ImageViewer
-        visible={imageViewerVisible}
-        imageUri={selectedImage}
-        onClose={closeImageViewer}
+      <ImageViewer 
+        visible={imageViewerVisible} 
+        imageUri={selectedImage} 
+        onClose={closeImageViewer} 
       />
     </View>
   );

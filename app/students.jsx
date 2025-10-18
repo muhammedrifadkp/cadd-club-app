@@ -56,7 +56,7 @@ export default function StudentsScreen() {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === "add") {
-      router.push("/add-student");
+      router.push('/add-student');
     }
   };
 
@@ -66,7 +66,7 @@ export default function StudentsScreen() {
 
   const handleDeleteStudent = async (studentId) => {
     try {
-      const updatedStudents = students.filter((student) => student.id !== studentId);
+      const updatedStudents = students.filter(student => student.id !== studentId);
       setStudents(updatedStudents);
       await AsyncStorage.setItem("caddClubStudents", JSON.stringify(updatedStudents));
     } catch (error) {
@@ -92,5 +92,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f1f5f9",
+    paddingBottom: 100, // Space for bottom navigation
   },
 });
