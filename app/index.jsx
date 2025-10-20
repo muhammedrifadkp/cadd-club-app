@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
 
+
 // Mock initial data
 const mockStudents = [
   {

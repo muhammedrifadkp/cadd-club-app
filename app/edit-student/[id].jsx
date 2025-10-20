@@ -6,6 +6,7 @@ import AddStudent from "../components/AddStudent.tsx";
 import BottomNav from "../components/BottomNav.js";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
+
 export default function EditStudentScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();

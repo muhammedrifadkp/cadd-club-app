@@ -163,6 +163,7 @@ export default function StudentsList({
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

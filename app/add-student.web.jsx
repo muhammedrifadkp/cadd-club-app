@@ -6,6 +6,7 @@ import AddStudent from "./components/AddStudent";
 import BottomNav from "./components/BottomNav";
 import { useRouter } from "expo-router";
 
+
 export default function AddStudentScreen() {
   const [students, setStudents] = useState([]);
   const [activeTab, setActiveTab] = useState("add");

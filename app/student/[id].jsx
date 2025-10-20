@@ -6,6 +6,7 @@ import StudentDetails from "../components/StudentDetails";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Alert } from "react-native";
 
+
 export default function StudentDetailsScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();

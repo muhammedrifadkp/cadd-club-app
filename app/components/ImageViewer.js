@@ -1,4 +1,5 @@
 // components/ImageViewer.js
+
 import React from "react";
 import { View, Text, Modal, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";

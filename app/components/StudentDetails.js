@@ -4,6 +4,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from "rea
 import { ArrowLeft, User, Calendar, Laptop, Monitor } from "lucide-react-native";
 import ImageViewer from "./ImageViewer";
 
+
 const StudentDetails = ({ student, onBack, onEdit, onDelete }) => {
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);

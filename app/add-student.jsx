@@ -39,6 +39,7 @@ export default function AddStudentScreen() {
     }
   };
 
+  
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     if (tab === "students") {

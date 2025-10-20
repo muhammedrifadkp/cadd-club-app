@@ -74,6 +74,7 @@ export default function StudentsScreen() {
     }
   };
 
+  
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
